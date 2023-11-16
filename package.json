@@ -1,0 +1,27 @@
+{
+  "name": "cjiscraper",
+  "version": "1.0.0",
+  "description": "Data Miner for CJIS",
+  "main": "miner.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blaher/CJIScraper.git"
+  },
+  "keywords": [
+    "miner",
+    "data",
+    "cjis"
+  ],
+  "author": "Benjamin J. Young",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/blaher/CJIScraper/issues"
+  },
+  "homepage": "https://github.com/blaher/CJIScraper#readme",
+  "dependencies": {
+    "puppeteer": "^21.5.2"
+  }
+}
