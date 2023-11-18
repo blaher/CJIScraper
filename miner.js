@@ -14,7 +14,7 @@ function delay(time) {
   //page.setDefaultTimeout(0);
 
   const config = require('./config.js');
-  const waitTime = 1000;
+  const waitTime = 500;
 
   // Navigate the page to a URL
   await page.goto(config.url);
@@ -24,6 +24,8 @@ function delay(time) {
   await delay(waitTime);
 
   await page.waitForSelector('#search');
+  await page.waitForSelector('button[type="submit"]');
+  await page.waitForSelector('input[ng-model="search.criteria"]');
   await delay(waitTime);
   await page.type('input[ng-model="search.criteria"]', 'ben');
   await delay(waitTime);
@@ -70,10 +72,26 @@ function delay(time) {
       'dob': await rowData[5],
       'charge': await rowData[6],
       'type': await rowData[7],
+      'attorney': '',
+      'prosecutor': '',
+      'judge': '',
     };
 
     if (map.court == 'CPC' && parseInt(map.caseNumber.substr(0, 4)) >= config.startYear) {
       ids[map.caseNumber] = false;
+
+      const [ccase] = await page.$x("//div[contains(., '" + map.caseNumber + "')]");
+      if (ccase) {
+          await ccase.click();
+          await delay(waitTime);
+
+          await page.waitForSelector('div[ng-transclude]');
+          map.attorney = page.$eval('div[ng-repeat="a in cc.participants[0].attorneys"]', el => el.textContent).catch(() => false);
+          map.judge = page.$eval('span[ng-show="cc.judge"]', el => el.textContent).catch(() => false);
+
+          page.goBack();
+          await delay(waitTime);
+      }
 
       // insert in to table here
 
@@ -82,6 +100,6 @@ function delay(time) {
   });
 
   Promise.all(data).then((values) => {
-    console.log(ids);
+    console.log(values);
   });
 })();
